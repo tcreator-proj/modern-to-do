@@ -1,24 +1,19 @@
 import { Link, BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Next } from './Next';
+import Header from './Header/Header';
 
 export default function App() {
   return (
-    <Router>
+    <>
       <div>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/center">About</Link>
-          </li>
-        </ul>
-
+        <Header />
+      </div>
+      <Router>
         <Routes>
           <Route path="/" element={<Next />} />
           <Route path="/center" element={<h2>Home</h2>} />
         </Routes>
-      </div>
     </Router>
+    </>
   )
 }
