@@ -6,6 +6,10 @@ export const store = () => configureStore({
   reducer: {
     todo: toDoSliceRedicer
   },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
   devTools: true,
 })
 

@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
 import Id from '../../ts/model/Id';
 import { ToDoItem } from '../../ts/model/ToDoItem';
 import { HYDRATE } from 'next-redux-wrapper';
@@ -17,34 +16,36 @@ export const toDoSlice = createSlice({
   name: 'to-do',
   initialState,
   reducers: {
-    append: (state, {payload}) => {
-      const newItem: ToDoItem = new ToDoItem(payload)
-      state.items.push(newItem);
+    append: (state, { payload }) => {
+      state.items.push(new ToDoItem(payload));
     },
-    remove: (state) => {
-      // state.value -= 1
+    remove: (state, {payload}) => {
+      state.items = state.items.filter((item: any) => {
+        const id: Id = item.getId();
+        return id.toEqual(payload);
+      })
     },
-    rewrite: (state, action: PayloadAction<number>) => {
-      // state.value += action.payload
+    rewrite: (state, { payload }) => {
+      // state.items.push(newItem);
     },
     clearDone: (state) => {
-
+      state.items = state.items.filter((item: any) => !item.getMark())
     },
-    mark: (state) => {
-
+    mark: (state, { payload }) => {
+      state.items.forEach((item: any) => {
+        const id: Id = item.getId();
+        if (id.toEqual(payload)) item.toggleMark();
+      })
     },
     markAll: (state) => {
-
+      const allMarks: boolean = state.items.every((item: any) => item.getMark())
+      if(allMarks) {
+        state.items.forEach((item: any) => item.toUnmark())
+      } else {
+        state.items.forEach((item: any) => item.toMark())
+      }
     }
-  },
-  extraReducers: {
-    [HYDRATE]: (state, action) => {
-      return {
-        ...state,
-        ...action.payload.auth,
-      };
-    },
-  },
+  }
 })
 
 

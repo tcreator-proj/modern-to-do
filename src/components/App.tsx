@@ -1,16 +1,11 @@
-import { Link, BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Box } from '@mui/material';
 import Header from './Header/Header';
+import style from './App.module.sass';
 
 export default function App() {
   return (
-    <>
-      <div>
-        <Header />
-      </div>
-      {/* <Router>
-        <Routes>
-        </Routes>
-      </Router> */}
-    </>
+    <Box className={style.box}>
+      <Header />
+    </Box>
   )
 }

@@ -10,7 +10,7 @@ export default class Id {
     return this._id;
   }
 
-  public toEqual(nextId: Id): boolean {
-    return this._id === nextId.id;
+  public toEqual(nextId: string): boolean {
+    return this._id === nextId;
   } 
 }

@@ -32,8 +32,16 @@ export class ToDoItem {
     return this._text;
   }
 
-  public toMark(): void {
+  public toggleMark(): void {
     this._mark = !this._mark;
+  }
+
+  public toMark(): void {
+    this._mark = true;
+  }
+
+  public toUnmark(): void {
+    this._mark = false;
   }
 
   public getMark(): boolean {
