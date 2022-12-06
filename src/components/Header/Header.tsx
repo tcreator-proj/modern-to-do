@@ -1,12 +1,13 @@
 import React from 'react';
-import { Typography } from '@mui/material';
-import style from './Header.module.sass'
+import MainInputField from './MainInputField/MainInputField';
+import Title from './Title/Title';
 
 function Header() {
   return (
-    <Typography className={style.header} variant='h1'>
-      todos
-    </Typography>
+    <header>
+      <Title />
+      <MainInputField />
+    </header>
   )
 }
 

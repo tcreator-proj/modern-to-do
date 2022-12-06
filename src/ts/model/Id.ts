@@ -1,4 +1,5 @@
 import {nanoid} from 'nanoid';
+
 export default class Id {
   protected _id: string;
   constructor() {

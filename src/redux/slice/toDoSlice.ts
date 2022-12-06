@@ -6,21 +6,20 @@ import { HYDRATE } from 'next-redux-wrapper';
 import { AppState } from '../store';
 
 export interface ToDoState {
-  idList: Id[],
-  toDoItems: Map<Id, ToDoItem>
+  items: ToDoItem[],
 }
 
 const initialState: ToDoState = {
-  idList: [new Id(), new Id()],
-  toDoItems: new Map()
+  items: [],
 }
 
 export const toDoSlice = createSlice({
   name: 'to-do',
   initialState,
   reducers: {
-    append: (state) => {
-      // state.value += 1
+    append: (state, {payload}) => {
+      const newItem: ToDoItem = new ToDoItem(payload)
+      state.items.push(newItem);
     },
     remove: (state) => {
       // state.value -= 1
@@ -50,5 +49,5 @@ export const toDoSlice = createSlice({
 
 
 export const { append, remove, rewrite, clearDone, mark, markAll } = toDoSlice.actions
-export const state = (state: AppState) => state.todo.idList
+export const items = (state: AppState) => state.todo.items;
 export default toDoSlice.reducer
