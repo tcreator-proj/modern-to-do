@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import Id from '../../ts/model/Id';
 import { ToDoItem } from '../../ts/model/ToDoItem';
-import { HYDRATE } from 'next-redux-wrapper';
 import { AppState } from '../store';
 
 export interface ToDoState {
@@ -19,7 +18,7 @@ export const toDoSlice = createSlice({
     append: (state, { payload }) => {
       state.items.push(new ToDoItem(payload));
     },
-    remove: (state, {payload}) => {
+    remove: (state, { payload }) => {
       state.items = state.items.filter((item: any) => {
         const id: Id = item.getId();
         return id.toEqual(payload);
@@ -32,18 +31,27 @@ export const toDoSlice = createSlice({
       state.items = state.items.filter((item: any) => !item.getMark())
     },
     mark: (state, { payload }) => {
-      state.items.forEach((item: any) => {
+      state.items = state.items.map((item: any) => {
         const id: Id = item.getId();
         if (id.toEqual(payload)) item.toggleMark();
+        return item;
       })
     },
     markAll: (state) => {
       const allMarks: boolean = state.items.every((item: any) => item.getMark())
-      if(allMarks) {
+
+      state.items.map((item: any) => {
+        allMarks ? item.toUnmark() : item.toMark();
+        
+        return item;
+      })
+
+      if (allMarks) {
         state.items.forEach((item: any) => item.toUnmark())
       } else {
         state.items.forEach((item: any) => item.toMark())
       }
+      state.items = [...state.items]
     }
   }
 })

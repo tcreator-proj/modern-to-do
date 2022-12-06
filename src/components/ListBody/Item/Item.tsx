@@ -24,7 +24,7 @@ function Item(props: ItemType) {
       <Checkbox
         id={id}
         className={style.checkbox}
-        defaultChecked={marked}
+        checked={marked}
         disableRipple
         onClick={onMarkHandler}
       />
