@@ -7,6 +7,8 @@ import { Box, List, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import FilterPanel from './FilterPanel/FilterPanel';
 import Item from './Item/Item';
 import { FormEventHandler } from 'react';
+import style from './ListBody.module.sass';
+import classNames from 'classnames';
 
 function ListBody() {
   const router: NextRouter = useRouter();
@@ -35,18 +37,23 @@ function ListBody() {
   if (!AllItem.length) return <></>;
 
   return (
-    <Box>
-      <Box>
+    <main className={style.listBox}>
+      <section className={classNames(style.arrowDown,
+            {
+              [style.allComplete]: itemList.every((el: ToDoItem) => el.getMark())
+            }
+          )}>
         <ToggleButtonGroup
+          
           color="primary"
           value='{alignment}'
           exclusive
           onChange={onAllChange}
           aria-label="Platform"
         >
-          <ToggleButton value="web">Web</ToggleButton>
+          <ToggleButton value="web"></ToggleButton>
         </ToggleButtonGroup>
-      </Box>
+      </section>
       <List>
         {
           itemList.map((item: ToDoItem) => <Item
@@ -60,7 +67,7 @@ function ListBody() {
       <Box>
         <FilterPanel />
       </Box>
-    </Box>
+    </main>
   )
 }
 

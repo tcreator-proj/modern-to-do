@@ -4,7 +4,6 @@ import ListBody from '../src/components/ListBody/ListBody';
 export default function Completed() {
   return (
     <>
-      <ListBody />
       <App />
     </>
   )

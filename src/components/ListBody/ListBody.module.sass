@@ -1,0 +1,39 @@
+.arrowDown
+  width: 30px
+  height: 30px
+  top: -45px
+  position: absolute
+  left: 10px
+  transform: rotate(90deg)
+
+  & .Mui-checked
+    background-color: green
+
+  & button
+    width: 30px
+    height: 30px
+    border: 0
+    top: -27px
+    left: 0
+
+    &:hover
+      border-radius: 50%
+
+  &::before
+    content: '❯'
+    font-size: 22px
+    color: #e6e6e6
+    padding: 10px 0px 3px 10px
+    transform: rotate(45deg)
+    -webkit-transform: rotate(45deg)
+
+.listBox
+  position: relative
+  width: 550px
+  background-color: rgb(255, 255, 255)
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px 0px, rgba(0, 0, 0, 0.1) 0px 25px 50px 0px
+
+.allComplete
+  &::before
+    color: #635f5f
+

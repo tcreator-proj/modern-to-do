@@ -1,0 +1,34 @@
+@import "../../../../globals"
+
+  
+.active
+  border: 1px solid rgba(175, 47, 47, 0.4)
+
+%main_styles
+  font-size: 14px
+  font-style: normal
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+  color: $main_text_color
+  -moz-user-select: none
+  -khtml-user-select: none
+  user-select: none
+
+.listForm
+  color: $main_text_color
+  display: flex
+  width: 160px
+  justify-content: space-between
+  & a
+    @extend %main_styles
+    text-decoration: none
+    margin: 3px
+    padding: 3px 7px
+    text-decoration: none
+    border: 1px solid transparent
+    border-radius: 3px
+    outline: none
+
+    &:hover
+      border-color: rgba(175, 47, 47, 0.1)
+
+

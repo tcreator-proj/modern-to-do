@@ -1,9 +1,11 @@
 import { Box, Typography } from '@mui/material';
-import Link from 'next/link'
-import React, { MouseEventHandler, useCallback} from 'react'
+import React, { MouseEventHandler, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { clearDone, items } from '../../../redux/slice/toDoSlice';
 import { ToDoItem } from '../../../ts/model/ToDoItem';
+import style from "./FilterPanel.module.sass"
+import FilterNavLink from './FilterNavLink/FilterNavLink';
+import classNames from 'classnames';
 
 function FilterPanel() {
   const dispatcher = useDispatch();
@@ -14,30 +16,30 @@ function FilterPanel() {
     dispatcher(clearDone())
   }, [])
 
+  let cleanerButtonClass = classNames(style.doneCleaner, {
+    [style.doneCleanerHide]: leftItems.length !== allItem.length
+  })
+
   if (!allItem.length) return <></>
 
   return (
-    <Box>
+    <nav className={style.filterBox}>
       <Box>
-        <Typography variant='subtitle1'>{leftItems.length} items left</Typography>
+        <Typography
+          className={style.leftNumber}
+          variant='subtitle1'>
+          {leftItems.length} items left
+        </Typography>
       </Box >
-      <Box>
-        <ul>
-          <li>
-            <Link href="/">All</Link>
-          </li>
-          <li>
-            <Link href="/completed">Completed</Link>
-          </li>
-          <li>
-            <Link href="/active">Active</Link>
-          </li>
-        </ul>
+      <FilterNavLink />
+      <Box className={style.doneCleanerBox}>
+        <span
+          onClick={onAllCompleteRemove}
+          className={cleanerButtonClass}>
+          Clear completed
+        </span>
       </Box>
-      <Box>
-        <span onClick={onAllCompleteRemove}>Clear completed</span>
-      </Box>
-    </Box >
+    </nav >
   )
 }
 

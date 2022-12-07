@@ -1,9 +1,9 @@
 import { ListItem, Checkbox, ListItemText, Box, TextField } from '@mui/material';
 import style from './Item.module.sass';
-import React, { MouseEventHandler, MouseEvent, useCallback, useState, FormEvent } from 'react';
+import React, { MouseEventHandler, MouseEvent, useCallback, useState, FormEvent, KeyboardEventHandler, FormEventHandler } from 'react';
 import { editedText, mark, remove, PayloadBody } from '../../../redux/slice/toDoSlice';
 import { useDispatch } from 'react-redux';
-import { KeyboardEventHandler, FormEventHandler } from 'react';
+import classNames from 'classnames';
 
 interface ItemType {
   id: string,
@@ -15,7 +15,6 @@ interface ItemType {
 function Item(props: ItemType) {
   const { id, text, edited, marked } = props;
   const [rewriting, setRewriting] = useState(false);
-
   const dispatcher = useDispatch();
 
   const onMarkHandler: MouseEventHandler = useCallback((evt: MouseEvent) => {
@@ -77,6 +76,19 @@ function Item(props: ItemType) {
     setRewriting(true);
   }
 
+  const listItemTextClass = classNames(
+    style.itemText,
+    {
+      [style.itemTextIsMarked]: marked
+    }
+  )
+  const editedClassName = classNames(
+    style.edited,
+    {
+      [style.show]: edited
+    }
+  )
+
   return (
     <ListItem className={style.item}>
       {!rewriting ?
@@ -88,11 +100,27 @@ function Item(props: ItemType) {
             disableRipple
             onClick={onMarkHandler}
           />
-          <ListItemText className={style[`markIs${marked}`]} onDoubleClick={onOpenInput}>{text}</ListItemText>
-          {edited && <span className={style.edited}>edited</span>}
-          <Box id={id} onClick={onClickRemoveHandler}>Удалить</Box>
+          <ListItemText
+            className={listItemTextClass}
+            onDoubleClick={onOpenInput}>
+            {text}
+          </ListItemText>
+          <span className={editedClassName}>edited</span>
+
+          <Box
+            id={id}
+            className={style.delete}
+            onClick={onClickRemoveHandler}
+          >
+            Удалить
+          </Box>
         </>
-        : <TextField id={id} defaultValue={text} autoFocus onKeyDown={onEditItem} onBlur={onBlurHandler} />}
+        : <TextField
+          id={id}
+          defaultValue={text}
+          autoFocus
+          onKeyDown={onEditItem}
+          onBlur={onBlurHandler} />}
     </ListItem>
   )
 }
