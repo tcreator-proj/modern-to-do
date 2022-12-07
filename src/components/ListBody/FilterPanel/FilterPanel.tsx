@@ -17,7 +17,7 @@ function FilterPanel() {
   }, [])
 
   let cleanerButtonClass = classNames(style.doneCleaner, {
-    [style.doneCleanerHide]: leftItems.length !== allItem.length
+    [style.doneCleanerHide]: leftItems.length === allItem.length
   })
 
   if (!allItem.length) return <></>
@@ -27,7 +27,8 @@ function FilterPanel() {
       <Box>
         <Typography
           className={style.leftNumber}
-          variant='subtitle1'>
+          variant='subtitle1'
+        >
           {leftItems.length} items left
         </Typography>
       </Box >

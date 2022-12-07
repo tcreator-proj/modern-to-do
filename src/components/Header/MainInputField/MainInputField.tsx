@@ -13,7 +13,7 @@ function MainInputField() {
     if (evt.key === "Enter" && target.value) {
 
       const payload: PayloadBody = {
-        id: null,
+        id: '',
         text: target.value.trim()
       }
       dispatcher(append(payload))

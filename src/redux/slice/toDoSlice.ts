@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import Id from '../../ts/model/Id';
 import { ToDoItem } from '../../ts/model/ToDoItem';
 import { AppState } from '../store';
@@ -8,12 +8,8 @@ export interface ToDoState {
 }
 
 export interface PayloadBody {
-  id: string | null,
-  text: string | null
-}
-
-interface Payload {
-  payload: PayloadBody
+  id: string,
+  text: string
 }
 
 const initialState: ToDoState = {
@@ -24,17 +20,18 @@ export const toDoSlice = createSlice({
   name: 'to-do',
   initialState,
   reducers: {
-    append: (state, { payload }: Payload) => {
-      state.items.push(new ToDoItem(payload.text));
+    append: (state, { payload }: PayloadAction<PayloadBody>) => {
+      if(payload.text) {
+        state.items.push(new ToDoItem(payload.text));
+      }
     },
-    remove: (state, { payload }: Payload) => {
-
+    remove: (state, { payload }: PayloadAction<PayloadBody>) => {
       state.items = state.items.filter((item: any) => {
         const id: Id = item.getId();
         return !id.toEqual(payload.id);
       })
     },
-    editedText: (state, {payload}: Payload) => {
+    editedText: (state, {payload}: PayloadAction<PayloadBody>) => {
       const {id, text} = payload;
       
       state.items = state.items.map((item: any) => {
@@ -46,7 +43,7 @@ export const toDoSlice = createSlice({
     clearDone: (state) => {
       state.items = state.items.filter((item: any) => !item.getMark())
     },
-    mark: (state, { payload }: Payload) => {
+    mark: (state, { payload }: PayloadAction<PayloadBody>) => {
       state.items = state.items.map((item: any) => {
         const id: Id = item.getId();
         if (id.toEqual(payload.id)) item.toggleMark();

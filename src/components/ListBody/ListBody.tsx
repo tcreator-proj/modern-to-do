@@ -16,6 +16,8 @@ function ListBody() {
   let itemList: ToDoItem[] = [];
   let dispatch = useDispatch();
 
+  console.log(itemList, AllItem)
+
   switch (router.route) {
     case "/completed": {
       itemList = AllItem.filter((item: ToDoItem) => item.getMark());

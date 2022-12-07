@@ -1,6 +1,6 @@
-import { ListItem, Checkbox, ListItemText, Box, TextField } from '@mui/material';
+import { ListItem, Checkbox, ListItemText, TextField } from '@mui/material';
 import style from './Item.module.sass';
-import React, { MouseEventHandler, MouseEvent, useCallback, useState, FormEvent, KeyboardEventHandler, FormEventHandler } from 'react';
+import React, { MouseEventHandler, MouseEvent, useCallback, useState, FormEvent, KeyboardEventHandler, FormEventHandler, KeyboardEvent } from 'react';
 import { editedText, mark, remove, PayloadBody } from '../../../redux/slice/toDoSlice';
 import { useDispatch } from 'react-redux';
 import classNames from 'classnames';
@@ -12,6 +12,8 @@ interface ItemType {
   marked: boolean
 }
 
+type AttributeData = string | undefined | null;
+
 function Item(props: ItemType) {
   const { id, text, edited, marked } = props;
   const [rewriting, setRewriting] = useState(false);
@@ -19,38 +21,48 @@ function Item(props: ItemType) {
 
   const onMarkHandler: MouseEventHandler = useCallback((evt: MouseEvent) => {
     const target: HTMLInputElement = evt.target as HTMLInputElement;
-
-    const payload: PayloadBody = {
-      id: target.getAttribute("id"),
-      text: null
+    const attrId: AttributeData = target.getAttribute("id");
+    if (attrId) {
+      const payload: PayloadBody = {
+        id: attrId,
+        text: ''
+      }
+      
+    dispatcher(mark(payload));
     }
 
-    dispatcher(mark(payload))
   }, [])
 
   const onClickRemoveHandler: MouseEventHandler = useCallback((evt: MouseEvent) => {
     const target: HTMLInputElement = evt.target as HTMLInputElement;
-
-    const payload: PayloadBody = {
-      id: target.getAttribute("id"),
-      text: null
-    }
-
-    dispatcher(remove(payload))
-  }, [])
-
-  const onEditItem: KeyboardEventHandler = (evt: KeyboardEvent) => {
-    const input: HTMLInputElement = evt.target as HTMLInputElement;
-    if (evt.key === "Enter") {
+    const attrId: AttributeData = target.getAttribute("id");
+    if (attrId) {
       const payload: PayloadBody = {
-        id: input.getAttribute("id"),
-        text: input.value
+        id: attrId,
+        text: ''
       }
 
-      if (input.value) {
-        dispatcher(editedText(payload))
-      } else {
-        dispatcher(remove(payload))
+      dispatcher(remove(payload))
+    }
+  }, [])
+
+  const onEditItem = (evt: KeyboardEvent) => {
+    const input: HTMLInputElement = evt.target as HTMLInputElement;
+
+    if (evt.key === "Enter") {
+
+      const attrId: AttributeData = input.getAttribute("id");
+      if (attrId) {
+        const payload: PayloadBody = {
+          id: attrId,
+          text: ''
+        }
+        if (input.value) {
+          payload.text = input.value.trim();
+          dispatcher(editedText(payload))
+        } else {
+          dispatcher(remove(payload))
+        }
       }
       setRewriting(false);
     }
@@ -59,16 +71,20 @@ function Item(props: ItemType) {
 
   const onBlurHandler: FormEventHandler = (evt: FormEvent) => {
     const input: HTMLInputElement = evt.target as HTMLInputElement;
-    const payload: PayloadBody = {
-      id: input.getAttribute("id"),
-      text: input.value
+    const attrId: AttributeData = input.getAttribute("id");
+    if (attrId) {
+      const payload: PayloadBody = {
+        id: attrId,
+        text: ''
+      }
+      if (input.value) {
+        payload.text = input.value.trim();
+        dispatcher(editedText(payload))
+      } else {
+        dispatcher(remove(payload))
+      }
     }
 
-    if (input.value) {
-      dispatcher(editedText(payload))
-    } else {
-      dispatcher(remove(payload))
-    }
     setRewriting(false);
   }
 
@@ -107,17 +123,17 @@ function Item(props: ItemType) {
           </ListItemText>
           <span className={editedClassName}>edited</span>
 
-          <Box
+          <button
             id={id}
             className={style.delete}
             onClick={onClickRemoveHandler}
           >
-            Удалить
-          </Box>
+          </button>
         </>
         : <TextField
           id={id}
           defaultValue={text}
+          className={style.hiddenField}
           autoFocus
           onKeyDown={onEditItem}
           onBlur={onBlurHandler} />}
