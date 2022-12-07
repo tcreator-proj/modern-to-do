@@ -10,17 +10,21 @@ import { FormEventHandler } from 'react';
 
 function ListBody() {
   const router: NextRouter = useRouter();
-  let itemList: ToDoItem[] = useSelector(items);
+  let AllItem: ToDoItem[] = useSelector(items);
+  let itemList: ToDoItem[] = [];
   let dispatch = useDispatch();
 
   switch (router.route) {
     case "/completed": {
-      itemList = itemList.filter((item: ToDoItem) => item.getMark());
+      itemList = AllItem.filter((item: ToDoItem) => item.getMark());
       break;
     }
     case "/active": {
-      itemList = itemList.filter((item: ToDoItem) => !item.getMark());
+      itemList = AllItem.filter((item: ToDoItem) => !item.getMark());
       break;
+    }
+    default: {
+      itemList = AllItem;
     }
   }
 
@@ -28,7 +32,7 @@ function ListBody() {
     dispatch(markAll());
   }, [])
 
-  if (!itemList.length) return <></>;
+  if (!AllItem.length) return <></>;
 
   return (
     <Box>
