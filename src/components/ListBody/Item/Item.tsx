@@ -27,8 +27,8 @@ function Item(props: ItemType) {
         id: attrId,
         text: ''
       }
-      
-    dispatcher(mark(payload));
+
+      dispatcher(mark(payload));
     }
 
   }, [])
@@ -105,13 +105,20 @@ function Item(props: ItemType) {
     }
   )
 
+  const checkboxStyle = classNames(
+    style.checkbox,
+    {
+      [style.checkboxChecked]: marked
+    }
+  )
+
   return (
     <ListItem className={style.item}>
       {!rewriting ?
         <>
           <Checkbox
             id={id}
-            className={style.checkbox}
+            className={checkboxStyle}
             checked={marked}
             disableRipple
             onClick={onMarkHandler}

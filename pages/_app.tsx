@@ -4,9 +4,8 @@ import { wrapper } from "../src/redux/store";
 
 function MyApp({ Component, pageProps }: AppProps) {
 
-  return <div>
-    {<Component {...pageProps} />}
-  </div>
+  return <Component {...pageProps} />
+  
 }
 
 export default wrapper.withRedux(MyApp);

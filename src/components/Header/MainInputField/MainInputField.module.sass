@@ -1,12 +1,7 @@
 @import "../../../globals"
 
-%placeholder
-  color: #e6e6e6
-  font-style: italic
-
 .input
-  padding: 16px 16px 16px 60px
-
+  padding: 16px 16px 16px 60px !important
   border: none
   background: $common_content_bgc
   box-sizing: border-box
@@ -23,12 +18,8 @@
     padding: 0
 
     &::-moz-placeholder
-      @extend %placeholder
+      color: #e6e6e6
+      font-style: italic
     &::-webkit-input-placeholder
-      @extend %placeholder
-    &:-moz-placeholder
-      @extend %placeholder
-    &::-moz-placeholder
-      @extend %placeholder
-    &:-ms-input-placeholder
-      @extend %placeholder
+      color: #e6e6e6
+      font-style: italic
