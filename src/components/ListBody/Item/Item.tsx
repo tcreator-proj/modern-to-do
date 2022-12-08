@@ -4,6 +4,7 @@ import React, { MouseEventHandler, MouseEvent, useCallback, useState, FormEvent,
 import { editedText, mark, remove, PayloadBody } from '../../../redux/slice/toDoSlice';
 import { useDispatch } from 'react-redux';
 import classNames from 'classnames';
+import { getTargetPayloadBody } from './Item.utill';
 
 interface ItemType {
   id: string,
@@ -12,8 +13,6 @@ interface ItemType {
   marked: boolean
 }
 
-type AttributeData = string | undefined | null;
-
 function Item(props: ItemType) {
   const { id, text, edited, marked } = props;
   const [rewriting, setRewriting] = useState(false);
@@ -21,70 +20,28 @@ function Item(props: ItemType) {
 
   const onMarkHandler: MouseEventHandler = useCallback((evt: MouseEvent) => {
     const target: HTMLInputElement = evt.target as HTMLInputElement;
-    const attrId: AttributeData = target.getAttribute("id");
-    if (attrId) {
-      const payload: PayloadBody = {
-        id: attrId,
-        text: ''
-      }
-
-      dispatcher(mark(payload));
-    }
-
+    dispatcher(mark(getTargetPayloadBody(target)));
   }, [])
 
   const onClickRemoveHandler: MouseEventHandler = useCallback((evt: MouseEvent) => {
     const target: HTMLInputElement = evt.target as HTMLInputElement;
-    const attrId: AttributeData = target.getAttribute("id");
-    if (attrId) {
-      const payload: PayloadBody = {
-        id: attrId,
-        text: ''
-      }
-
-      dispatcher(remove(payload))
-    }
+    dispatcher(remove(getTargetPayloadBody(target)))
   }, [])
 
   const onEditItem = (evt: KeyboardEvent) => {
     const input: HTMLInputElement = evt.target as HTMLInputElement;
-
-    if (evt.key === "Enter") {
-
-      const attrId: AttributeData = input.getAttribute("id");
-      if (attrId) {
-        const payload: PayloadBody = {
-          id: attrId,
-          text: ''
-        }
-        if (input.value) {
-          payload.text = input.value.trim();
-          dispatcher(editedText(payload))
-        } else {
-          dispatcher(remove(payload))
-        }
-      }
+    const payload: PayloadBody = getTargetPayloadBody(input)
+    if(evt.key === "Enter") {
+      dispatcher(payload.text ? editedText(payload) : remove(payload) )
       setRewriting(false);
     }
-  }
 
+  }
 
   const onBlurHandler: FormEventHandler = (evt: FormEvent) => {
     const input: HTMLInputElement = evt.target as HTMLInputElement;
-    const attrId: AttributeData = input.getAttribute("id");
-    if (attrId) {
-      const payload: PayloadBody = {
-        id: attrId,
-        text: ''
-      }
-      if (input.value) {
-        payload.text = input.value.trim();
-        dispatcher(editedText(payload))
-      } else {
-        dispatcher(remove(payload))
-      }
-    }
-
+    const payload: PayloadBody = getTargetPayloadBody(input)
+    dispatcher(input.value ? editedText(payload) : remove(payload) )
     setRewriting(false);
   }
 
@@ -104,7 +61,6 @@ function Item(props: ItemType) {
       [style.show]: edited
     }
   )
-
   const checkboxStyle = classNames(
     style.checkbox,
     {

@@ -42,7 +42,7 @@ function ListBody() {
     <main className={style.listBox}>
       <section className={classNames(style.arrowDown,
             {
-              [style.allComplete]: itemList.every((el: ToDoItem) => el.getMark())
+              [style.allComplete]: AllItem.every((el: ToDoItem) => el.getMark())
             }
           )}>
         <ToggleButtonGroup
