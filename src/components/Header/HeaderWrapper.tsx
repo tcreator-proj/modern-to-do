@@ -1,15 +1,14 @@
-import { TextField } from '@mui/material';
-import { KeyboardEvent, useCallback, KeyboardEventHandler } from 'react';
-import { append, PayloadBody } from '../../../redux/slice/toDoSlice';
-import style from "./MainInputField.module.sass"
+import React, { KeyboardEventHandler, useCallback, KeyboardEvent} from 'react';
 import { useDispatch } from 'react-redux';
+import { PayloadBody, append } from '../../redux/slice/toDoSlice';
+import MainInputField from '../MainInputField/MainInputField';
+import Title from '../Title/Title';
 
-function MainInputField() {
+function HeaderWrapper() {
   const dispatcher = useDispatch();
 
   const onEnterHandler: KeyboardEventHandler = useCallback((evt: KeyboardEvent) => {
     const target: HTMLInputElement = evt.target as HTMLInputElement;
-
     if (evt.key === "Enter" && target.value) {
 
       const payload: PayloadBody = {
@@ -22,11 +21,11 @@ function MainInputField() {
   }, []);
 
   return (
-    <TextField
-      className={style.input}
-      placeholder="What needs to be done"
-      onKeyDown={onEnterHandler} />
+    <header>
+      <Title />
+      <MainInputField onEnterHandler={onEnterHandler} />
+    </header>
   )
 }
 
-export default MainInputField;
+export default HeaderWrapper

@@ -1,6 +1,6 @@
 import { ListItem, Checkbox, ListItemText, TextField } from '@mui/material';
 import style from './Item.module.sass';
-import React, { MouseEventHandler, MouseEvent, useCallback, useState, FormEvent, KeyboardEventHandler, FormEventHandler, KeyboardEvent } from 'react';
+import React, { MouseEventHandler, MouseEvent, useCallback, useState, FormEvent, KeyboardEventHandler, FormEventHandler, KeyboardEvent, useMemo } from 'react';
 import { editedText, mark, remove, PayloadBody } from '../../../redux/slice/toDoSlice';
 import { useDispatch } from 'react-redux';
 import classNames from 'classnames';
@@ -10,63 +10,60 @@ interface ItemType {
   id: string,
   text: string,
   edited: boolean,
-  marked: boolean
+  marked: boolean,
+  onCheckbockClick: MouseEventHandler,
+  onClickToRemove: MouseEventHandler,
+  onChangeEditorField: KeyboardEventHandler,
+  onBlurHandler: FormEventHandler
 }
 
 function Item(props: ItemType) {
-  const { id, text, edited, marked } = props;
+  const {
+    id,
+    text,
+    edited,
+    marked,
+    onCheckbockClick,
+    onClickToRemove,
+    onChangeEditorField,
+    onBlurHandler
+  } = props;
   const [rewriting, setRewriting] = useState(false);
-  const dispatcher = useDispatch();
 
-  const onMarkHandler: MouseEventHandler = useCallback((evt: MouseEvent) => {
-    const target: HTMLInputElement = evt.target as HTMLInputElement;
-    dispatcher(mark(getTargetPayloadBody(target)));
-  }, [])
-
-  const onClickRemoveHandler: MouseEventHandler = useCallback((evt: MouseEvent) => {
-    const target: HTMLInputElement = evt.target as HTMLInputElement;
-    dispatcher(remove(getTargetPayloadBody(target)))
-  }, [])
-
-  const onEditItem = (evt: KeyboardEvent) => {
-    const input: HTMLInputElement = evt.target as HTMLInputElement;
-    const payload: PayloadBody = getTargetPayloadBody(input)
-    if(evt.key === "Enter") {
-      dispatcher(payload.text ? editedText(payload) : remove(payload) )
-      setRewriting(false);
-    }
-
-  }
-
-  const onBlurHandler: FormEventHandler = (evt: FormEvent) => {
-    const input: HTMLInputElement = evt.target as HTMLInputElement;
-    const payload: PayloadBody = getTargetPayloadBody(input)
-    dispatcher(input.value ? editedText(payload) : remove(payload) )
-    setRewriting(false);
-  }
-
-  const onOpenInput: MouseEventHandler = () => {
+  const onDblClickToOpenInput: MouseEventHandler = useCallback(() => {
     setRewriting(true);
-  }
+  }, []);
 
-  const listItemTextClass = classNames(
+  const onBlurHadlerAdapter = useCallback((evt: FormEvent) => {
+    onBlurHandler(evt);
+    setRewriting(false);
+  }, []);
+
+  const onChangeEditorFieldAdapter = useCallback((evt: KeyboardEvent) => {
+    onChangeEditorField(evt);
+    setRewriting(false);
+  }, []);
+
+  const listItemTextClass: string = useMemo(() => classNames(
     style.itemText,
     {
       [style.itemTextIsMarked]: marked
     }
-  )
-  const editedClassName = classNames(
+  ), [marked]);
+
+  const editedClassName: string = useMemo(() => classNames(
     style.edited,
     {
       [style.show]: edited
     }
-  )
-  const checkboxStyle = classNames(
+  ), [edited]);
+
+  const checkboxStyle: string = useMemo(() => classNames(
     style.checkbox,
     {
       [style.checkboxChecked]: marked
     }
-  )
+  ), [marked]);
 
   return (
     <ListItem className={style.item}>
@@ -77,11 +74,11 @@ function Item(props: ItemType) {
             className={checkboxStyle}
             checked={marked}
             disableRipple
-            onClick={onMarkHandler}
+            onClick={onCheckbockClick}
           />
           <ListItemText
             className={listItemTextClass}
-            onDoubleClick={onOpenInput}>
+            onDoubleClick={onDblClickToOpenInput}>
             {text}
           </ListItemText>
           <span className={editedClassName}>edited</span>
@@ -89,7 +86,7 @@ function Item(props: ItemType) {
           <button
             id={id}
             className={style.delete}
-            onClick={onClickRemoveHandler}
+            onClick={onClickToRemove}
           >
           </button>
         </>
@@ -98,10 +95,10 @@ function Item(props: ItemType) {
           defaultValue={text}
           className={style.hiddenField}
           autoFocus
-          onKeyDown={onEditItem}
-          onBlur={onBlurHandler} />}
+          onKeyDown={onChangeEditorFieldAdapter}
+          onBlur={onBlurHadlerAdapter} />}
     </ListItem>
   )
 }
 
-export default React.memo(Item)
+export default React.memo(Item);

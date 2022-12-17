@@ -1,26 +1,29 @@
 import { Box, Typography } from '@mui/material';
-import React, { MouseEventHandler, useCallback } from 'react'
-import { useSelector, useDispatch } from 'react-redux';
-import { clearDone, items } from '../../../redux/slice/toDoSlice';
-import { ToDoItem } from '../../../ts/model/ToDoItem';
+import React, { MouseEventHandler, useMemo } from 'react'
 import style from "./FilterPanel.module.sass"
 import FilterNavLink from './FilterNavLink/FilterNavLink';
 import classNames from 'classnames';
+import { PathNames } from './FilterNavLink/FilterNavLink.types';
 
-function FilterPanel() {
-  const dispatcher = useDispatch();
-  const allItem: ToDoItem[] = useSelector(items);
-  const leftItems: ToDoItem[] = allItem.filter((item: ToDoItem) => !item.getMark());
+interface FilterPanelType {
+  filterLinks: PathNames[],
+  onAllCompletedRemove: MouseEventHandler,
+  leftItems: number,
+  activeRoute: string,
+  markItem: boolean
+}
 
-  const onAllCompleteRemove: MouseEventHandler = useCallback(() => {
-    dispatcher(clearDone())
-  }, [])
+function FilterPanel({
+  activeRoute,
+  filterLinks,
+  onAllCompletedRemove,
+  leftItems,
+  markItem
+}: FilterPanelType) {
 
-  let cleanerButtonClass = classNames(style.doneCleaner, {
-    [style.doneCleanerHide]: leftItems.length === allItem.length
-  })
-
-  if (!allItem.length) return <></>
+  let cleanerButtonClass = useMemo(() => classNames(style.doneCleaner, {
+    [style.doneCleanerHide]: markItem
+  }), []);
 
   return (
     <nav className={style.filterBox}>
@@ -29,13 +32,13 @@ function FilterPanel() {
           className={style.leftNumber}
           variant='subtitle1'
         >
-          {leftItems.length} items left
+          {leftItems} items left
         </Typography>
       </Box >
-      <FilterNavLink />
+      <FilterNavLink filterItems={filterLinks} activeRoute={activeRoute} />
       <Box className={style.doneCleanerBox}>
         <span
-          onClick={onAllCompleteRemove}
+          onClick={onAllCompletedRemove}
           className={cleanerButtonClass}>
           Clear completed
         </span>
@@ -44,4 +47,4 @@ function FilterPanel() {
   )
 }
 
-export default FilterPanel
+export default React.memo(FilterPanel);

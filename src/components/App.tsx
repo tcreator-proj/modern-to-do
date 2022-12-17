@@ -1,13 +1,27 @@
 import { Box } from '@mui/material';
-import Header from './Header/Header';
 import style from './App.module.sass';
-import ListBody from './ListBody/ListBody';
+import { ToDoItem } from '../ts/model/ToDoItem';
+import ToDoWrapper from './ListBody/ToDoWrapper';
+import { FormEventHandler, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import { markAll } from '../redux/slice/toDoSlice';
+import HeaderWrapper from './Header/HeaderWrapper';
 
-export default function App() {
+interface AppType {
+  items: ToDoItem[]
+}
+
+export default function App({items}: AppType) {
+  let dispatch = useDispatch();
+
+  const onAllChange: FormEventHandler = useCallback(() => {
+    dispatch(markAll());
+  }, []);
+
   return (
     <Box className={style.box}>
-      <Header />
-      <ListBody />
+      <HeaderWrapper />
+      <ToDoWrapper items={items} onChangeAllHandler={onAllChange} />
     </Box>
   )
 }

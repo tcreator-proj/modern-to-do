@@ -1,44 +1,41 @@
 import classNames from 'classnames';
 import Link from 'next/link';
-import { NextRouter, useRouter } from 'next/router';
 import style from './FilterNavLink.module.sass';
-import { useCallback, useMemo } from 'react';
-import { nanoid } from 'nanoid';
+import { useCallback } from 'react';
+import React from 'react';
+import { PathNames } from './FilterNavLink.types';
 
-type PathNames = {
-  id: string,
-  route: string,
-  name: string
+interface FilterNavLinkType {
+  filterItems: PathNames[],
+  activeRoute: string
 }
 
-export default function FilterNavLink() {
-  const router: NextRouter = useRouter();
+function FilterNavLink({ filterItems, activeRoute }: FilterNavLinkType) {
 
-  const routeList: PathNames[] = useMemo(() => [
-    { route: '/', name: "All", id: nanoid()},
-    { route: '/completed', name: "Completed", id: nanoid() },
-    { route: '/active', name: "Active", id: nanoid() }
-  ], []);
-
-  const linkClass = useCallback((route: string) => {
+  const linkClass = useCallback((active: boolean) => {
     return classNames(
-      { [style.active]: router.route === route }
+      { [style.active]: active }
     )
-  }, [])
+  }, []);
+
+  const linkMap = useCallback(() => {
+    return filterItems.map((filterItem: PathNames, i: number) => {
+      return (
+        <li key={i}>
+          <Link href={filterItem.route}
+            className={linkClass(activeRoute === filterItem.route)}>
+            {filterItem.name}
+          </Link>
+        </li>
+      )
+    })
+  }, [filterItems]);
 
   return (
     <ul className={style.listForm}>
-      {routeList.map((path: PathNames) => {
-        return (
-          <li key={path.id}>
-            <Link href={path.route}
-              className={linkClass(path.route)}>
-              {path.name}
-            </Link>
-          </li>
-        )
-      })}
+      {linkMap()}
     </ul>
-
   )
-}
+};
+
+export default React.memo(FilterNavLink);
