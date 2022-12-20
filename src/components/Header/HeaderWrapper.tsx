@@ -18,7 +18,7 @@ function HeaderWrapper() {
       dispatcher(append(payload))
       target.value = "";
     }
-  }, []);
+  }, [dispatcher]);
 
   return (
     <header>

@@ -1,20 +1,19 @@
 import { ListItem, Checkbox, ListItemText, TextField } from '@mui/material';
 import style from './Item.module.sass';
-import React, { MouseEventHandler, MouseEvent, useCallback, useState, FormEvent, KeyboardEventHandler, FormEventHandler, KeyboardEvent, useMemo } from 'react';
-import { editedText, mark, remove, PayloadBody } from '../../../redux/slice/toDoSlice';
-import { useDispatch } from 'react-redux';
+import React, { MouseEventHandler, KeyboardEventHandler, FormEventHandler } from 'react';
 import classNames from 'classnames';
-import { getTargetPayloadBody } from './Item.utill';
 
 interface ItemType {
   id: string,
   text: string,
   edited: boolean,
   marked: boolean,
+  rewriting: boolean,
   onCheckbockClick: MouseEventHandler,
   onClickToRemove: MouseEventHandler,
   onChangeEditorField: KeyboardEventHandler,
-  onBlurHandler: FormEventHandler
+  onBlurHandler: FormEventHandler,
+  onDblClickToOpenInput: MouseEventHandler
 }
 
 function Item(props: ItemType) {
@@ -23,47 +22,34 @@ function Item(props: ItemType) {
     text,
     edited,
     marked,
+    rewriting,
     onCheckbockClick,
     onClickToRemove,
     onChangeEditorField,
-    onBlurHandler
+    onBlurHandler,
+    onDblClickToOpenInput
   } = props;
-  const [rewriting, setRewriting] = useState(false);
 
-  const onDblClickToOpenInput: MouseEventHandler = useCallback(() => {
-    setRewriting(true);
-  }, []);
-
-  const onBlurHadlerAdapter = useCallback((evt: FormEvent) => {
-    onBlurHandler(evt);
-    setRewriting(false);
-  }, []);
-
-  const onChangeEditorFieldAdapter = useCallback((evt: KeyboardEvent) => {
-    onChangeEditorField(evt);
-    setRewriting(false);
-  }, []);
-
-  const listItemTextClass: string = useMemo(() => classNames(
+  const listItemTextClass: string = classNames(
     style.itemText,
     {
       [style.itemTextIsMarked]: marked
     }
-  ), [marked]);
+  );
 
-  const editedClassName: string = useMemo(() => classNames(
+  const editedClassName: string = classNames(
     style.edited,
     {
       [style.show]: edited
     }
-  ), [edited]);
+  );
 
-  const checkboxStyle: string = useMemo(() => classNames(
+  const checkboxStyle: string = classNames(
     style.checkbox,
     {
       [style.checkboxChecked]: marked
     }
-  ), [marked]);
+  );
 
   return (
     <ListItem className={style.item}>
@@ -95,8 +81,8 @@ function Item(props: ItemType) {
           defaultValue={text}
           className={style.hiddenField}
           autoFocus
-          onKeyDown={onChangeEditorFieldAdapter}
-          onBlur={onBlurHadlerAdapter} />}
+          onKeyDown={onChangeEditorField}
+          onBlur={onBlurHandler} />}
     </ListItem>
   )
 }

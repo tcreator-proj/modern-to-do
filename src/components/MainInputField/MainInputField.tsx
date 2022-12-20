@@ -1,4 +1,5 @@
 import { TextField } from '@mui/material';
+import React from 'react';
 import { KeyboardEventHandler } from 'react';
 import style from "./MainInputField.module.sass"
 
@@ -15,4 +16,4 @@ function MainInputField({onEnterHandler}: InputType) {
   )
 }
 
-export default MainInputField;
+export default React.memo(MainInputField);

@@ -12,24 +12,20 @@ interface FilterNavLinkType {
 
 function FilterNavLink({ filterItems, activeRoute }: FilterNavLinkType) {
 
-  const linkClass = useCallback((active: boolean) => {
-    return classNames(
-      { [style.active]: active }
-    )
-  }, []);
-
   const linkMap = useCallback(() => {
     return filterItems.map((filterItem: PathNames, i: number) => {
       return (
         <li key={i}>
           <Link href={filterItem.route}
-            className={linkClass(activeRoute === filterItem.route)}>
+            className={classNames(
+              { [style.active]: activeRoute === filterItem.route }
+            )}>
             {filterItem.name}
           </Link>
         </li>
       )
     })
-  }, [filterItems]);
+  }, [filterItems, activeRoute]);
 
   return (
     <ul className={style.listForm}>

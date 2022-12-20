@@ -2,8 +2,8 @@ import React, { MouseEventHandler, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { items, clearDone } from '../../redux/slice/toDoSlice';
 import { ToDoItem } from '../../ts/model/ToDoItem';
-import { PathNames } from '../ListBody/FilterPanel/FilterNavLink/FilterNavLink.types';
-import FilterPanel from '../ListBody/FilterPanel/FilterPanel';
+import { PathNames } from '../ToDoWrapper/FilterPanel/FilterNavLink/FilterNavLink.types';
+import FilterPanel from '../ToDoWrapper/FilterPanel/FilterPanel';
 import { useRouter } from 'next/router';
 
 function NavigationPanelWrapper() {
@@ -16,12 +16,13 @@ function NavigationPanelWrapper() {
   }, [allItem]);
 
   const isCompletedExists: boolean = useMemo(
-    () => allItem.length - leftItems.length > 0, [allItem]
+    () => allItem.length - leftItems.length > 0,
+    [allItem, leftItems.length]
   );
 
   const onAllCompleteRemove: MouseEventHandler = useCallback(() => {
     dispatcher(clearDone())
-  }, []);
+  }, [dispatcher]);
 
   const routeList: PathNames[] = useMemo(() => [
     { route: '/', name: "All" },
@@ -40,4 +41,4 @@ function NavigationPanelWrapper() {
   )
 };
 
-export default React.memo(NavigationPanelWrapper);
+export default NavigationPanelWrapper;

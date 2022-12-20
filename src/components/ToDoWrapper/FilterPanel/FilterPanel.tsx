@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import React, { MouseEventHandler, useMemo } from 'react'
+import React, { MouseEventHandler } from 'react'
 import style from "./FilterPanel.module.sass"
 import FilterNavLink from './FilterNavLink/FilterNavLink';
 import classNames from 'classnames';
@@ -21,9 +21,9 @@ function FilterPanel({
   markItem
 }: FilterPanelType) {
 
-  let cleanerButtonClass = useMemo(() => classNames(style.doneCleaner, {
+  let cleanerButtonClass = classNames(style.doneCleaner, {
     [style.doneCleanerHide]: markItem
-  }), []);
+  });
 
   return (
     <nav className={style.filterBox}>
