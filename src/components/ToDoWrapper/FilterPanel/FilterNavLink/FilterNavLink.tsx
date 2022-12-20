@@ -16,7 +16,8 @@ function FilterNavLink({ filterItems, activeRoute }: FilterNavLinkType) {
     return filterItems.map((filterItem: PathNames, i: number) => {
       return (
         <li key={i}>
-          <Link href={filterItem.route}
+          <Link
+            href={filterItem.route}
             className={classNames(
               { [style.active]: activeRoute === filterItem.route }
             )}>

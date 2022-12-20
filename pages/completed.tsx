@@ -10,7 +10,7 @@ function Completed() {
     .filter((item: ToDoItem) => item.getMark()), [allItems]);
 
   return (
-    <App items={completedItems} />
+    <App items={completedItems} isEmptyToDos={!!allItems.length}/>
   )
 };
 

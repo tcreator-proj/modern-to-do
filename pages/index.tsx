@@ -6,7 +6,7 @@ import { ToDoItem } from '../src/ts/model/ToDoItem';
  function Home() {
   let allItems: ToDoItem[] = useSelector(items);
 
-  return <App items={allItems}/>
+  return <App items={allItems} isEmptyToDos={!!allItems.length}/>
 }
 
 export default Home;

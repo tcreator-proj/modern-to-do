@@ -38,7 +38,7 @@ function NavigationPanelWrapper() {
       activeRoute={activeRoute}
       markItem={isCompletedExists}
     />
-  )
-};
+  );
+}
 
 export default NavigationPanelWrapper;

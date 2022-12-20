@@ -5,15 +5,16 @@ import ToDoWrapper from './ToDoWrapper/ToDoWrapper';
 import HeaderWrapper from './Header/HeaderWrapper';
 
 interface AppType {
-  items: ToDoItem[]
+  items: ToDoItem[],
+  isEmptyToDos: boolean
 }
 
-export default function App({items}: AppType) {
+export default function App({items, isEmptyToDos}: AppType) {
 
   return (
     <Box className={style.box}>
       <HeaderWrapper />
-      <ToDoWrapper items={items} />
+      <ToDoWrapper items={items} isEmptyToDos={isEmptyToDos} />
     </Box>
   )
 }

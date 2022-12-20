@@ -11,10 +11,11 @@ import NavigationPanelWrapper from '../NavigationPanelWrapper/NavigationPanelWra
 import { getTargetPayloadBody } from './Item/Item.utill';
 
 interface ToDoItems {
-  items: ToDoItem[]
+  items: ToDoItem[],
+  isEmptyToDos: boolean
 }
 
-function ToDoWrapper({ items }: ToDoItems) {
+function ToDoWrapper({ items, isEmptyToDos}: ToDoItems) {
   let dispatch = useDispatch();
   const [rewriting, setRewriting] = useState(false);
 
@@ -69,8 +70,11 @@ function ToDoWrapper({ items }: ToDoItems) {
 
   const didEverythingItemsCompleted: boolean = useMemo(() => {
     return items.every((el: ToDoItem) => el.getMark());
-  }, [items])
+  }, [items]);
 
+  if(!isEmptyToDos) {
+    return <></>;
+  }
   return (
     <main className={style.listBox}>
       <ToggleAllItems
