@@ -22,7 +22,7 @@ function FilterPanel({
 }: FilterPanelType) {
 
   let cleanerButtonClass = classNames(style.doneCleaner, {
-    [style.doneCleanerHide]: markItem
+    [style.doneCleanerHide]: !markItem
   });
 
   return (

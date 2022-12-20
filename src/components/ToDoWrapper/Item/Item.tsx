@@ -1,6 +1,6 @@
 import { ListItem, Checkbox, ListItemText, TextField } from '@mui/material';
 import style from './Item.module.sass';
-import React, { MouseEventHandler, KeyboardEventHandler, FormEventHandler } from 'react';
+import React, { MouseEventHandler, KeyboardEventHandler, KeyboardEvent, FormEventHandler, useState, FormEvent } from 'react';
 import classNames from 'classnames';
 
 interface ItemType {
@@ -8,12 +8,10 @@ interface ItemType {
   text: string,
   edited: boolean,
   marked: boolean,
-  rewriting: boolean,
   onCheckbockClick: MouseEventHandler,
   onClickToRemove: MouseEventHandler,
-  onChangeEditorField: KeyboardEventHandler,
-  onBlurHandler: FormEventHandler,
-  onDblClickToOpenInput: MouseEventHandler
+  onChangeEditorField: Function,
+  onBlurHandler: FormEventHandler
 }
 
 function Item(props: ItemType) {
@@ -22,13 +20,22 @@ function Item(props: ItemType) {
     text,
     edited,
     marked,
-    rewriting,
     onCheckbockClick,
     onClickToRemove,
     onChangeEditorField,
-    onBlurHandler,
-    onDblClickToOpenInput
+    onBlurHandler
   } = props;
+  const [rewriting, setRewriting] = useState(false);
+
+  const onDblClickToOpenInput: MouseEventHandler = () => setRewriting(true);
+  const onBlurAdapter: FormEventHandler = (evt: FormEvent) => {
+    onBlurHandler(evt);
+    setRewriting(() => false);
+  };
+
+  const onEditAdapter: KeyboardEventHandler = onChangeEditorField(
+    () => setRewriting(() => false)
+  );
 
   const listItemTextClass: string = classNames(
     style.itemText,
@@ -81,8 +88,8 @@ function Item(props: ItemType) {
           defaultValue={text}
           className={style.hiddenField}
           autoFocus
-          onKeyDown={onChangeEditorField}
-          onBlur={onBlurHandler} />}
+          onKeyDown={onEditAdapter}
+          onBlur={onBlurAdapter} />}
     </ListItem>
   )
 }

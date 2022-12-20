@@ -15,13 +15,8 @@ interface ToDoItems {
   isEmptyToDos: boolean
 }
 
-function ToDoWrapper({ items, isEmptyToDos}: ToDoItems) {
+function ToDoWrapper({ items, isEmptyToDos }: ToDoItems) {
   let dispatch = useDispatch();
-  const [rewriting, setRewriting] = useState(false);
-
-  const onDblClickToOpenInput: MouseEventHandler = useCallback(() => {
-      setRewriting(true);
-    }, []);
 
   const onAllChange: FormEventHandler = useCallback(() => {
     dispatch(markAll());
@@ -37,12 +32,14 @@ function ToDoWrapper({ items, isEmptyToDos}: ToDoItems) {
     dispatch(remove(getTargetPayloadBody(target)));
   }, [dispatch]);
 
-  const onEditItem: KeyboardEventHandler = useCallback((evt: KeyboardEvent) => {
-    const input: HTMLInputElement = evt.target as HTMLInputElement;
-    const payload: PayloadBody = getTargetPayloadBody(input);
-    if (evt.key === "Enter") {
-      dispatch(payload.text ? editedText(payload) : remove(payload));
-      setRewriting(false);
+  const onEditItem: Function = useCallback((callback: Function): KeyboardEventHandler => {
+    return (evt: KeyboardEvent) => {
+      const input: HTMLInputElement = evt.target as HTMLInputElement;
+      const payload: PayloadBody = getTargetPayloadBody(input);
+      if (evt.key === "Enter") {
+        dispatch(payload.text ? editedText(payload) : remove(payload));
+        callback();
+      }
     }
   }, [dispatch]);
 
@@ -50,21 +47,18 @@ function ToDoWrapper({ items, isEmptyToDos}: ToDoItems) {
     const input: HTMLInputElement = evt.target as HTMLInputElement;
     const payload: PayloadBody = getTargetPayloadBody(input);
     dispatch(input.value ? editedText(payload) : remove(payload));
-    setRewriting(false);
   }, [dispatch]);
 
   const mapToDoItemElement = useCallback(() => {
     return items.map((item: ToDoItem) => <Item
-      rewriting={rewriting}
       key={item.getId().id}
       id={item.getId().id}
       text={item.getText()}
       edited={item.getEdited()}
-      marked={item.getMark()} 
-      onDblClickToOpenInput={onDblClickToOpenInput}
-      onCheckbockClick={onMarkHandler} 
-      onClickToRemove={onClickRemoveHandler} 
-      onChangeEditorField={onEditItem} 
+      marked={item.getMark()}
+      onCheckbockClick={onMarkHandler}
+      onClickToRemove={onClickRemoveHandler}
+      onChangeEditorField={onEditItem}
       onBlurHandler={onBlurHandler} />)
   }, [items]);
 
@@ -72,7 +66,7 @@ function ToDoWrapper({ items, isEmptyToDos}: ToDoItems) {
     return items.every((el: ToDoItem) => el.getMark());
   }, [items]);
 
-  if(!isEmptyToDos) {
+  if (!isEmptyToDos) {
     return <></>;
   }
   return (
